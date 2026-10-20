@@ -154,38 +154,46 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            _Header(item: _item),
-            TabBar(
-              tabs: [
-                const Tab(text: 'About'),
-                Tab(text: 'Players (${_item.count})'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _AboutTab(item: _item),
-                  _PlayersTab(item: _item, me: _me),
+        body: LayoutBuilder(
+          builder: (context, constraints) => Column(
+            children: [
+              // A share of the height we get, so landscape keeps room
+              // for the tabs and the button.
+              SizedBox(
+                width: double.infinity,
+                height: (constraints.maxHeight * 0.3).clamp(80, 220),
+                child: _Header(item: _item),
+              ),
+              TabBar(
+                tabs: [
+                  const Tab(text: 'About'),
+                  Tab(text: 'Players (${_item.count})'),
                 ],
               ),
-            ),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: canAct ? _primary : null,
-                    icon: Icon(_joined ? Icons.logout : Icons.how_to_reg),
-                    label: Text(_joined ? 'Leave' : 'Join'),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _AboutTab(item: _item),
+                    _PlayersTab(item: _item, me: _me),
+                  ],
+                ),
+              ),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: canAct ? _primary : null,
+                      icon: Icon(_joined ? Icons.logout : Icons.how_to_reg),
+                      label: Text(_joined ? 'Leave' : 'Join'),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -208,8 +216,7 @@ class _Header extends StatelessWidget {
     final colors = item.discipline.colorsIn(Theme.of(context).colorScheme);
     final countdown = Countdown.of(item.startsAt, DateTime.now());
 
-    return AspectRatio(
-      aspectRatio: 16 / 6,
+    return ClipRect(
       child: Stack(
         fit: StackFit.expand,
         children: [
