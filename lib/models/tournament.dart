@@ -16,18 +16,18 @@ class Tournament {
     this.online = false,
     this.description,
     this.favourite = false,
-  }) : _players = players;
+  }) : _names = players;
 
   /// Defaults for a brand-new tournament in the form.
   Tournament.empty()
-      : this(
-          id: DateTime.now().microsecondsSinceEpoch.toString(),
-          title: '',
-          discipline: Discipline.cs2,
-          startsAt: DateTime.now().add(const Duration(days: 7)),
-          slots: 16,
-          venue: '',
-        );
+    : this(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        title: '',
+        discipline: Discipline.cs2,
+        startsAt: DateTime.now().add(const Duration(days: 7)),
+        slots: 16,
+        venue: '',
+      );
 
   final String id;
   final String title;
@@ -42,16 +42,16 @@ class Tournament {
   final bool online;
   final String? description;
   final bool favourite;
-  final List<String> _players;
+  final List<String> _names;
 
   /// Read-only view: the list can only change through [copyWith].
-  List<String> get players => List.unmodifiable(_players);
+  List<String> get players => List.unmodifiable(_names);
 
-  int get count => _players.length;
+  int get count => _names.length;
   int get free => (slots - count).clamp(0, slots);
   bool get isFull => count >= slots;
   bool get isPast => DateTime.now().isAfter(startsAt.add(tournamentLength));
-  bool contains(String name) => _players.any((p) => p == name);
+  bool contains(String name) => _names.any((p) => p == name);
 
   ({int taken, int free}) get places => (taken: count, free: free);
 
@@ -65,19 +65,18 @@ class Tournament {
     bool? online,
     String? Function()? description,
     bool? favourite,
-  }) =>
-      Tournament(
-        id: id,
-        title: title ?? this.title,
-        discipline: discipline ?? this.discipline,
-        startsAt: startsAt ?? this.startsAt,
-        slots: slots ?? this.slots,
-        venue: venue ?? this.venue,
-        players: players ?? _players,
-        online: online ?? this.online,
-        description: description != null ? description() : this.description,
-        favourite: favourite ?? this.favourite,
-      );
+  }) => Tournament(
+    id: id,
+    title: title ?? this.title,
+    discipline: discipline ?? this.discipline,
+    startsAt: startsAt ?? this.startsAt,
+    slots: slots ?? this.slots,
+    venue: venue ?? this.venue,
+    players: players ?? _names,
+    online: online ?? this.online,
+    description: description != null ? description() : this.description,
+    favourite: favourite ?? this.favourite,
+  );
 }
 
 /// Upcoming first by date, past ones last.
